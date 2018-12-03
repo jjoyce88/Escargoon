@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\assets",
+    "\\assets\\links",
+    "\\commands"
   ],
+  "SelectedNode": "\\commands\\hello.js",
   "PreviewInSolutionExplorer": false
 }

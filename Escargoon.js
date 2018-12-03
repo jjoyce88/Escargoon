@@ -1,63 +1,53 @@
 const Discord = require('discord.js');
 const config = require("./config.json");
-const prefix = config.prefix;
 const Commando = require("discord.js-commando");
+const fs = require('fs');
 
 const client = new Commando.Client({
-    owner: config.ownerID
+	owner: config.ownerID,
+	commandPrefix: config.prefix,
+	unknownCommandResponse: false
 });
 
+client.commands = new Discord.Collection();
 const path = require('path');
 
-client.registry
-    // Registers your custom command groups
-    .registerGroups([
-        ['help', 'Get information on Escargoon\'s commands']
-    ])
+fs.readdir("./commands/", (err, files) => {
 
-    // Registers all built-in groups, commands, and argument types
-    .registerDefaults()
+	if (err) console.log(err);
 
-    // Registers all of your commands in the ./commands/ directory
-    .registerCommandsIn(path.join(__dirname, 'commands'));
+	let jsfile = files.filter(f => f.split(".").pop() === "js")
+	if (jsfile.length <= 0) {
+		console.log("Couldn't find commands.");
+		return;
+	}
+
+	jsfile.forEach((f, i) => {
+		let props = require(`./commands/${f}`);
+		console.log(`${f} loaded!`);
+		client.commands.set(props.help.name, props);
+	});
+
+});
 
 client.on('ready', () =>
 {
-	console.log("I'm online!");
-});
-
-// This loop reads the /events/ folder and attaches each event file to the appropriate event.
-fs.readdir("./events/", (err, files) =>
-{
-	if (err) return console.error(err);
-	files.forEach(file =>
-	{
-		let eventFunction = require(`./events/${file}`);
-		let eventName = file.split(".")[0];
-
-		// super-secret recipe to call events with all their proper arguments *after* the `client` var.
-		client.on(eventName, (...args) => eventFunction.run(client, ...args));
-	});
+	serverNum = client.guilds.size;
+	console.log("I'm online on " + serverNum + " servers!");
 });
  
 client.on("message", message =>
 {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-	if(message.content.indexOf(config.prefix) !== 0) return;
+	if (message.author.bot) return;
+	if (message.channel.type === "dm") return;
 
-	// Define arguments
-	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-	const command = args.shift().toLowerCase();
-	
-	try
-	{
-		let commandFile = require(`./commands/${command}.js`);
-		commandFile.run(client, message, args);
-	}
-	catch (err)
-	{
-		console.error(err);
-	}
+	let prefix = config.prefix;
+	let messageArray = message.content.split(" ");
+	let cmd = messageArray[0];
+	let args = messageArray.slice(1);
+
+	let commandfile = client.commands.get(cmd.slice(prefix.length));
+	if (commandfile) commandfile.run(client, message, args);
 
 });
  

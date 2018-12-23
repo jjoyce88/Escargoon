@@ -27,11 +27,14 @@ fs.readdir("./commands/", (err, files) => {
 		console.log(`${f} loaded!`);
 		client.commands.set(props.help.name, props);
 	});
+	
+
 
 });
 
 client.on('ready', () =>
 {
+
 	serverNum = client.guilds.size;
 	console.log("I'm online on " + serverNum + " servers!");
 });
@@ -50,5 +53,17 @@ client.on("message", message =>
 	if (commandfile) commandfile.run(client, message, args);
 
 });
+
+client.on("guildMemberAdd",member => {
+	channel = member.guild.channels.find(ch => ch.name === config.greetChannel); 
+	if(!channel)
+		console.log("Could not find channel: "+ config.greetChannel);
+	emote = client.emojis.find(emoji => emoji.name === "WaddleWave");
+	if(emote)
+		channel.send(member.displayName+", has joined the server. \nSay Hello! "+emote);
+	else
+		channel.send(member.displayName+", has joined the server. \nSay Hello! ");
+});
  
-client.login(config.token);
+
+client.login(config.token).then(console.log).catch(console.error);

@@ -58,11 +58,11 @@ client.on("guildMemberAdd",member => {
 	channel = member.guild.channels.find(ch => ch.name === config.greetChannel); 
 	if(!channel)
 		console.log("Could not find channel: "+ config.greetChannel);
-	emote = client.emojis.find(emoji => emoji.name === "WaddleWave");
-	if(emote)
-		channel.send(member.displayName+", has joined the server. \nSay Hello! "+emote);
+	waddleWave = client.emojis.find(emoji => emoji.name === "WaddleWave");
+	if (emote)
+		channel.send(member.displayName + ", has joined the server. \nSay Hello! " + waddleWave);
 	else
-		channel.send(member.displayName+", has joined the server. \nSay Hello! ");
+		channel.send(member.displayName + ", has joined the server. \nSay Hello! ");
 });
  
 

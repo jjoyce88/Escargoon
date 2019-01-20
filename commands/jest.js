@@ -3,9 +3,10 @@ const fs = require("fs");
 module.exports.run = async (bot, message, args) => {
 	
 	
-	path = "./assets/jest/";
+	path = "./assets/images/PoorlyDrawnDDD/";
 	img = "";
-	fs.readdir(path,function(err,pics){
+	
+	fs.readdir(path, (err,pics) => {
 		console.log(pics);
 		index = Math.floor(Math.random() * Math.floor(pics.length-1));
 		console.log("\nSelected image is: "+pics[index]);
@@ -18,7 +19,7 @@ module.exports.run = async (bot, message, args) => {
 				}]
 			});
 				
-		});
+	});
 
 };
 

@@ -3,7 +3,7 @@ const fs = require("fs");
 module.exports.run = async (bot, message, args) => {
 	
 	
-	path = "./assets/images/PoorlyDrawnDDD/";
+	path = "./assets/images/Jest/";
 	img = "";
 	
 	fs.readdir(path, (err,pics) => {
